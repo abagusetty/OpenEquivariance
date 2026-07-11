@@ -340,9 +340,9 @@ ffi::Error tp_backward_impl(
         check_tensor(*W_grad, {num_batch, k.weight_numel}, k.weight_dtype, "W_grad");
     }
 
-    if (k.shared_weights) {
-        zero_buffer(*W_grad, stream);
-    } 
+    zero_buffer(*L1_grad, stream);
+    zero_buffer(*L2_grad, stream);
+    zero_buffer(*W_grad, stream);
 
     jit_kernel->backward(
             num_batch,
@@ -391,9 +391,10 @@ ffi::Error tp_double_backward_impl(
         check_tensor(W_dgrad, {num_batch, k.weight_numel}, k.weight_dtype, "W_dgrad");
     }
 
-    if (k.shared_weights) {
-        zero_buffer(*W_grad, stream);
-    } 
+    zero_buffer(*L1_grad, stream);
+    zero_buffer(*L2_grad, stream);
+    zero_buffer(*W_grad, stream);
+    zero_buffer(*L3_dgrad, stream);
 
     jit_kernel->double_backward(
             num_batch,
